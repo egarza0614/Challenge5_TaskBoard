@@ -23,9 +23,24 @@ function handleAddTask(event){
 }
 
 // Todo: create a function to handle deleting a task
-function handleDeleteTask(event){
-
-}
+function handleDeleteTask(event, task_index) {
+    // Access the task list (replace with your actual task storage logic)
+    const tasks = todoList.tasks;
+  
+    // Check for invalid index
+    if (task_index < 0 || task_index >= tasks.length) {
+      console.error("Invalid task index");
+      // Handle the error here, e.g., display an error message
+      return;
+    }
+  
+    // Remove the task from the list
+    tasks.splice(task_index, 1);
+  
+    // Update the UI (replace with your UI framework's methods)
+    todoList.render();
+  }
+  
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
