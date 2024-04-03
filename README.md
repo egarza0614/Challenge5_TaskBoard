@@ -1,5 +1,4 @@
-# Challenge5_TaskBoard
-# Challenge 4: My Personal Blog Site | Eloy Garza
+# Challenge5_TaskBoard | Eloy Garza
 
 ## Description
 
