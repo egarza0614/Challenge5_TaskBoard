@@ -10,7 +10,7 @@ function generateTaskId() {
 // Function to create a task card
 function createTaskCard(task) {
   const cardTemplate = `
-  <div class="card mb-2 task-card" data-task-id="${task.id}">
+  <div class="card mb-2 task-card" data-task-id="${task.id}" ${getDueColorClass(task.dueDate)} card-with-due-date">
     <div class="card-body">
       <h5 class="card-title">${task.title}</h5>
       <p class="card-text">${task.description || ""}</p>
@@ -23,7 +23,8 @@ function createTaskCard(task) {
 
 // Function to render the task list and make cards draggable
 function renderTaskList() {
-  $("#todo-cards").empty(); // Clear existing cards
+  // Clear existing cards
+  $("#todo-cards").empty(); 
   $("#in-progress-cards").empty();
   $("#done-cards").empty();
 
@@ -38,6 +39,21 @@ function renderTaskList() {
     containment: ".swim-lanes",
     revert: true,
   });
+}
+
+// Function to check for tasks nearing the deadline within 2 days or overdue
+function getDueColorClass(dueDate) {
+  const today = dayjs();
+  const dueDateObj = dayjs(dueDate);
+  const daysRemaining = dueDateObj.diff(today, 'days');
+  
+  if (daysRemaining < 0) {
+    return 'bg-danger'; // Red for overdue
+  } else if (daysRemaining <= 2 && daysRemaining >0) {
+    return 'bg-warning'; // Yellow for nearing deadline
+  } else {
+    return ''; // No color class for tasks further out
+  }
 }
 
 // Function to handle adding a new task
@@ -87,7 +103,16 @@ function handleDeleteTask(event) {
 // Function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
   const taskId = ui.draggable.data("taskId");
-  const newStatus = $(event.target).closest(".lane").attr("id"); // Get lane id
+  let newStatus = $(event.target).closest(".lane").attr("id"); // Get lane id
+
+  // Map lane id to task status
+  if (newStatus === "todo-cards") {
+    newStatus = "to-do";
+  } else if (newStatus === "in-progress-cards") {
+    newStatus = "in-progress";
+  } else if (newStatus === "done-cards") {
+    newStatus = "done";
+  }
 
   const task = taskList.find((task) => task.id === taskId);
   if (task) {
@@ -97,10 +122,10 @@ function handleDrop(event, ui) {
 
   renderTaskList();
 }
-
-// When the page loads
+// When the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
-  renderTaskList(); // Render initial task list
+  // Render the initial task list
+  renderTaskList();
 
   // Add event listeners
   $("#taskForm").submit(handleAddTask);
@@ -109,7 +134,6 @@ $(document).ready(function () {
     accept: ".task-card",
     drop: handleDrop,
   });
-
-  // Make due date field a date picker
+  // Make the due date field a date picker
   $("#dueDate").datepicker();
 });

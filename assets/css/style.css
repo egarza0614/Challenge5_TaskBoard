@@ -9,8 +9,17 @@ body {
 
 .task-card {
   margin: 0 auto;
+  z-index: 1;
 }
 
 .task-card:hover {
   cursor: grab;
+}
+
+.bg-danger {
+  background-color: #dc3545 !important; /* Red for overdue tasks */
+}
+
+.bg-warning {
+  background-color: #ffc107 !important; /* Yellow for tasks nearing deadline */
 }
