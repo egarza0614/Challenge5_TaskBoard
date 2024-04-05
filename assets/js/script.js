@@ -7,10 +7,30 @@ function generateTaskId() {
   return nextId++; // Increment nextId and return it
 }
 
+// Function to check for tasks nearing the deadline within 2 days or overdue
+function getDueColorClass(dueDate) {
+  const today = dayjs();
+  const dueDateObj = dayjs(dueDate);
+  const daysRemaining = dueDateObj.diff(today, 'days');
+  
+  if (daysRemaining < 1) {
+    return 'bg-danger'; // Red for overdue
+  } else if (daysRemaining <= 3 && daysRemaining > 0) {
+    return 'bg-warning'; // Yellow for nearing deadline
+  } else {
+    return ''; // No color class for tasks further out
+  }
+}
+
 // Function to create a task card
 function createTaskCard(task) {
+  let dueColorClass = getDueColorClass(task.dueDate);  // Call getDueColorClass to get the class
+  // Check if task is in "done" lane
+  if (task.status === "done") {
+    dueColorClass = ""; // Remove any color class for done tasks
+  }
   const cardTemplate = `
-  <div class="card mb-2 task-card" data-task-id="${task.id}" ${getDueColorClass(task.dueDate)} card-with-due-date">
+  <div class="card mb-2 task-card ${dueColorClass}" data-task-id="${task.id}" card-with-due-date">
     <div class="card-body">
       <h5 class="card-title">${task.title}</h5>
       <p class="card-text">${task.description || ""}</p>
@@ -39,21 +59,6 @@ function renderTaskList() {
     containment: ".swim-lanes",
     revert: true,
   });
-}
-
-// Function to check for tasks nearing the deadline within 2 days or overdue
-function getDueColorClass(dueDate) {
-  const today = dayjs();
-  const dueDateObj = dayjs(dueDate);
-  const daysRemaining = dueDateObj.diff(today, 'days');
-  
-  if (daysRemaining < 0) {
-    return 'bg-danger'; // Red for overdue
-  } else if (daysRemaining <= 2 && daysRemaining >0) {
-    return 'bg-warning'; // Yellow for nearing deadline
-  } else {
-    return ''; // No color class for tasks further out
-  }
 }
 
 // Function to handle adding a new task

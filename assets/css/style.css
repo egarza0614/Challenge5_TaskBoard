@@ -9,15 +9,16 @@ body {
 
 .task-card {
   margin: 0 auto;
-  z-index: 1;
 }
 
 .task-card:hover {
   cursor: grab;
+  z-index: 1;
 }
 
 .bg-danger {
   background-color: #dc3545 !important; /* Red for overdue tasks */
+  color: white; /* Set text color to white */
 }
 
 .bg-warning {
