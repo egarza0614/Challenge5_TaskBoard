@@ -13,9 +13,9 @@ function getDueColorClass(dueDate) {
   const dueDateObj = dayjs(dueDate);
   const daysRemaining = dueDateObj.diff(today, 'days');
   
-  if (daysRemaining < 1) {
+  if (daysRemaining < 0) {
     return 'bg-danger'; // Red for overdue
-  } else if (daysRemaining <= 3 && daysRemaining > 0) {
+  } else if (daysRemaining <= 3 && daysRemaining >= 0) {
     return 'bg-warning'; // Yellow for nearing deadline
   } else {
     return ''; // No color class for tasks further out
@@ -101,7 +101,10 @@ function handleDeleteTask(event) {
     taskList.splice(taskIndex, 1);
     localStorage.setItem("tasks", JSON.stringify(taskList));
 
-    renderTaskList();
+    renderTaskList(); // Update task list
+
+    // Remove the card element from DOM
+    $(event.currentTarget).closest(".task-card").remove();
   }
 }
 
